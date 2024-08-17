@@ -1,0 +1,4 @@
+Starting System Orchestrator...
+Browser profile /Users/namanjain/Library/Application Support/Google/Chrome
+Browser started and ready.
+Enter your command (or type 'exit' to quit): 
