@@ -1,4 +1,4 @@
-# jobber - apply to relavant jobs on internet autnomously
+# jobber - apply to relavant jobs on internet autonomously
 
 jobber is an ai agent that searches and applies for jobs on your behalf by controlling your browser. put in your resume and preferences and it does the work in background.
 
