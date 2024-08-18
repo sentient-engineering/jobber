@@ -26,7 +26,6 @@ class BaseAgent:
         if tools:
             self._initialize_tools(tools)
             self.llm_config.update({"tools": self.tools_list, "tool_choice": "auto"})
-        # print("model", self.llm_config)
 
     def _initialize_tools(self, tools: List[Tuple[Callable, str]]):
         for function, description in tools:
@@ -62,7 +61,6 @@ class BaseAgent:
             tool_calls = response_message.tool_calls
 
             if tool_calls:
-                print("^^^^^^^^^^ tolls callss")
                 self.messages.append(response_message)
                 for tool_call in tool_calls:
                     function_name = tool_call.function.name
@@ -78,7 +76,6 @@ class BaseAgent:
                                 "content": str(function_response),
                             }
                         )
-                        print("^^^^^^^^^^ tool called")
                     except Exception as e:
                         logger.info(f"***** Error occurred: {str(e)}")
                         self.messages.append(
@@ -92,10 +89,7 @@ class BaseAgent:
                                 ),
                             }
                         )
-                print("^^^^^calling LLM again with function response")
                 continue
-
-            print("uiewbeiu")
 
             content = response_message.content
             if "##TERMINATE TASK##" in content or "## TERMINATE TASK ##" in content:
@@ -106,15 +100,12 @@ class BaseAgent:
             else:
                 try:
                     extracted_response = extract_json(content)
-                    print("lovely", extracted_response)
                     if extracted_response.get("terminate") == "yes":
-                        print("should terminate now")
                         return {
                             "terminate": True,
                             "content": extracted_response.get("final_response"),
                         }
                     else:
-                        print("retunring next step")
                         return {
                             "terminate": False,
                             "content": extracted_response.get("next_step"),
@@ -140,7 +131,6 @@ class BaseAgent:
         return self.send(reply["content"], sender)
 
     async def process_query(self, query: str) -> Dict[str, Any]:
-        print("processing&&&&&&&&&&&&&&&&&&&")
         try:
             screenshot = await get_screenshot()
             return await self.generate_reply(

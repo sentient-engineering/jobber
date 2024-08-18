@@ -45,7 +45,6 @@ class BrowserNavAgent(BaseAgent):
             query + f"\n The current page URL is {current_page_url}"
         )
         message_for_planner = response["content"]
-        print("terminating navigator", message_for_planner)
         self.reset_messages()  # Call the method to reset messages
         return await self.planner_agent.receive_browser_message(message_for_planner)
 

@@ -30,16 +30,12 @@ class PlannerAgent(BaseAgent):
     async def process_query(self, query: str):
         response = await super().process_query(query)
 
-        print("$$$$$$$4", response)
-
         while not response["terminate"]:
-            print("y89379038729872398")
 
             # the browser navigator has ##TERMINATE TASK## in its response, it will self termiate and call the receive_browser_message function defined below
             await self.browser_agent.process_query(response["content"])
 
             # processing of the entire task done
-            print("jai shree ram, exiting")
 
             final_response = "Task done successfully"
 
@@ -69,14 +65,10 @@ class PlannerAgent(BaseAgent):
             self.browser_agent,
         )
 
-        print("$$$87286748726487", processed_helper_response)
-
         # Check for termination immediately after processing the helper response
         if processed_helper_response.get("terminate"):
-            print("returing", processed_helper_response["content"])
             return processed_helper_response["content"]
         else:
-            print("uhu823842390489032")
             await self.browser_agent.process_query(processed_helper_response["content"])
 
     def __get_ltm(self):
