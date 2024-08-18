@@ -121,8 +121,10 @@ class BaseAgent:
                         }
                 # handling the case when browser nav does not send ##TERMINATE TASK## in its response. We will get an error in extract_json function which we are catching here
                 # we still return terminate true and send the message as is to the planner
-                except:
-                    print("navigator did not send ##Terminate task##", content)
+                except Exception as e:
+                    logger.info(
+                        f"navigator did not send ##Terminate task## error - {e} & content - {content}"
+                    )
                     return {
                         "terminate": True,
                         "content": content,

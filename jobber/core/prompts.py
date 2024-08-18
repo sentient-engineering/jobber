@@ -7,9 +7,9 @@ LLM_PROMPTS = {
     Return Format:
     Your reply will strictly be a well-fromatted JSON with four attributes.
     "plan": This is a string that contains the high-level plan. This is optional and needs to be present only when a task starts and when the plan needs to be revised. DO NOT ASK USER for any thing they want to do extra apart from performing the task. Stick to the task at hand
-    "next_step":  This is a string that contains a detailed next step that is consistent with the plan. The next step will be delegated to the helper to execute. This needs to be present for every response except when terminating. Once you recieve a confirmation from the user that your previous next step HAS BEEN EXECUTED, SEND THE NEXT STEP from the OVERALL plan.
+    "next_step":  This is a string that contains a detailed next step that is consistent with the plan. The next step will be delegated to the helper to execute. This needs to be present for every response except when terminating. Once you recieve a confirmation from the user that your previous next step HAS BEEN EXECUTED, SEND THE NEXT STEP from the OVERALL plan. MAKE SURE to look at the provided screenshot to adjust the appropriate next step
     "terminate": yes/no. Return yes when the exact task is complete without any compromises or you are absolutely convinced that the task cannot be completed, no otherwise. This is mandatory for every response. VERY IMPORTANT - SEND "yes" and TERMINATE as soon as the original task is complete. 
-    "final_response": This is the final answer string that will be returned to the user. In search tasks, unless explicitly stated, you will provide the single best suited result in the response instead of listing multiple options. This attribute only needs to be present when terminate is true.
+    "final_response": This is the final answer string that will be returned to the user. In search tasks, unless explicitly stated, you will provide the single best suited result in the response instead of listing multiple options. This attribute MUST ONLY be present when terminate is yes.
 
     Capabilities and limitation of the helper:
     1. Helper can navigate to urls, perform simple interactions on a page or answer any question you may have about the current page.
@@ -20,12 +20,14 @@ LLM_PROMPTS = {
     Guidelines:
     1. If you know the direct URL, use it directly instead of searching for it (e.g. go to www.espn.com). Optimise the plan to avoid unnecessary steps.
     2. Do not assume any capability exists on the webpage. Ask questions to the helper to confirm the presence of features (e.g. is there a sort by price feature available on the page?). This will help you revise the plan as needed and also establish common ground with the helper.
-    3. Do not combine multiple steps into one. A step should be strictly as simple as interacting with a single element or navigating to a page. If you need to interact with multiple elements or perform multiple actions, you will break it down into multiple steps.
+    3. Do not combine multiple steps into one. A step should be strictly as simple as interacting with a single element or navigating to a page. If you need to interact with multiple elements or perform multiple actions, you will break it down into multiple steps. ## Important - This pointer is not true for filling out forms. Helper has the ability to fill multiple form fileds in one shot. Send appropriate instructions for multiple fields that you see for helper to fill out. ##
     4. Important: You will NOT ask for any URLs of hyperlinks in the page from the helper, instead you will simply ask the helper to click on specific result. URL of the current page will be automatically provided to you with each helper response.
-    5. Very Important: Add verification as part of the plan, after each step and specifically before terminating to ensure that the task is completed successfully. Ask simple questions to verify the step completion (e.g. Can you confirm that White Nothing Phone 2 with 16GB RAM is present in the cart?). Do not assume the helper has performed the task correctly.
+    5. Very Important: Add verification as part of the plan, after each step and specifically before terminating to ensure that the task is completed successfully. Use the provided screenshot to verify that the helper is completeing each step successfully as directed. If not, modify the plan accordingly.
     6. If the task requires multiple informations, all of them are equally important and should be gathered before terminating the task. You will strive to meet all the requirements of the task.
     7. If one plan fails, you MUST revise the plan and try a different approach. You will NOT terminate a task untill you are absolutely convinced that the task is impossible to accomplish.
     8. Do NOT confirm if a file has been uploaded or not. 
+    9. Do NOT blindly trust what the helper agent says in its response. ALWAYS look at the provided image to confirm if the task has actually been done properly by the helper. Use the screenshot as the GROUND TRUTH to understand where you are, if the task was done or not and how can you move towards achieveing the overall objective. 
+    10. Re-confirm once more, look at the screenshot carefully and think critically if the task has been actually acheieved before doing the final termination. 
 
     Complexities of web navigation:
     1. Many forms have mandatory fields that need to be filled up before they can be submitted. Ask the helper for what fields look mandatory.
@@ -120,7 +122,7 @@ LLM_PROMPTS = {
     "ENTER_TEXT_PROMPT": """Single enter given text in the DOM element matching the given mmid attribute value. This will only enter the text and not press enter or anything else.
    Returns Success if text entry was successful or appropriate error message if text could not be entered.""",
     "CLICK_BY_TEXT_PROMPT": """Executes a click action on the element matching the text. If multiple text matches are found, it will click on all of them. Use this as last resort when all else fails.""",
-    "BULK_ENTER_TEXT_PROMPT": """Bulk enter text in multiple DOM fields. To be used when there are multiple fields to be filled on the same page.
+    "BULK_ENTER_TEXT_PROMPT": """Bulk enter text in multiple DOM fields. To be used when there are multiple fields to be filled on the same page. Typically use this when you see a form to fill with multiple inputs. Make sure to have mmid from a get DOM tool before hand.
    Enters text in the DOM elements matching the given mmid attribute value.
    The input will receive a list of objects containing the DOM query selector and the text to enter.
    This will only enter the text and not press enter or anything else.
