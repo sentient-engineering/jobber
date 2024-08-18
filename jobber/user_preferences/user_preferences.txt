@@ -1,25 +1,26 @@
 Personal Info:
 First Name: Nischal
 Last Name: Jain
-Date of birth: 09/10/2001
+Date of birth: 
 Pronouns: He/Him
-Email: nischalj10@gmail.com
+
+Email: 
 Expeted Salary: 5000000
 Occupation: Data Engineer
-Experience - Mid
 Address: Indiranagr, Bengaluru
-Phone Number: 6350317505
+Phone Number: 
 LinkedIn - https://linkedin.com/in/nischalj10
-DO NOT UPLOAD CUSTOM RESUME IF RESUME IS ALREADY PRESENT. JUST SELECT DEFAULT RESUME. 
-DO NOT CONFIRM DETAILS FROM ME OR THE helper agent. Autonomously decide. Default Selected options are always good to go.
-FOR EVERY KIND OF EXPERIENCE ASKED IN CASE OF JOB Applications - Say I have 4 years of experience in it. You have my authority.
+
+
 Here are some of my preferences:
 Shopping Preferences: www.amazon.com
 Favorite news source: www.thehindu.com
 Favorite flight booking site to use with every flight related query: https://www.google.com/travel/flightsno
 Resume File to Upload Path = /Users/namanjain/Downloads/DummyResume.pdf
 My best project - checkout headless-ollama on google
-I am confortable commuting to office.
-I have 4 years of experience in TypeScript, Node Js, Nextjs, Python, Django and evey other field of technology.
-I have work authorization for working in USA.
-i have experience in cloud infrastructure, data warheouses.
+
+
+I am comfortable commuting to office.
+I have 4 years of experience in TypeScript, Node Js, Nextjs.
+I have work authorization for working in the USA.
+I have experience in cloud infrastructure, data warheouses.
