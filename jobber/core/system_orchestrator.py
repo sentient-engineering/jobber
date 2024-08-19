@@ -25,8 +25,11 @@ class SystemOrchestrator:
                 command = await self.get_user_input()
                 if command.lower() == "exit":
                     await self.shutdown()
-                else:
+                    break
+                elif command.strip():  # Only execute non-empty commands
                     await self.execute_command(command)
+                else:
+                    continue
             except asyncio.CancelledError:
                 break
             except Exception as e:
@@ -43,6 +46,7 @@ class SystemOrchestrator:
             planner = PlannerAgent()
             result = await planner.process_query(command)
             print(f"Command execution result: {result}")
+            return
         except Exception as e:
             print(f"Error executing command: {e}")
 

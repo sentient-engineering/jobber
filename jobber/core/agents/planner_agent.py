@@ -30,17 +30,26 @@ class PlannerAgent(BaseAgent):
     async def process_query(self, query: str):
         response = await super().process_query(query)
 
-        while not response["terminate"]:
+        while True:
+            # If we get terminate right away from planner
+            if response.get("terminate", False):
+                return response["content"]
 
-            # the browser navigator has ##TERMINATE TASK## in its response, it will self termiate and call the receive_browser_message function defined below
-            await self.browser_agent.process_query(response["content"])
+            # Process the browser response
+            processed_browser_response = await self.browser_agent.process_query(
+                response["content"]
+            )
 
-            # processing of the entire task done
+            if processed_browser_response.get("terminate", False):
+                return processed_browser_response[
+                    "content"
+                ]  # Final response to SystemOrchestrator
 
-            final_response = "Task done successfully"
+            # Update the response for the next iteration
+            response = processed_browser_response
 
-            self.reset_messages()
-            return final_response
+        # This line should never be reached, but it's good practice to have it
+        return "Error: Unexpected end of process_query"
 
     async def receive_browser_message(self, message: str):
         print("recieved browser message")
@@ -65,11 +74,7 @@ class PlannerAgent(BaseAgent):
             self.browser_agent,
         )
 
-        # Check for termination immediately after processing the helper response
-        if processed_helper_response.get("terminate"):
-            return processed_helper_response["content"]
-        else:
-            await self.browser_agent.process_query(processed_helper_response["content"])
+        return processed_helper_response  # Return the response to the process_query funciton's while True loop
 
     def __get_ltm(self):
         return ltm.get_user_ltm()
