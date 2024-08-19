@@ -189,6 +189,7 @@ class Parameters(BaseModel):
     type: Literal["object"] = "object"
     properties: Dict[str, JsonSchemaValue]
     required: List[str]
+    additionalProperties: bool
 
 
 class Function(BaseModel):
@@ -197,6 +198,7 @@ class Function(BaseModel):
     description: Annotated[str, Field(description="Description of the function")]
     name: Annotated[str, Field(description="Name of the function")]
     parameters: Annotated[Parameters, Field(description="Parameters of the function")]
+    strict: bool
 
 
 class ToolFunction(BaseModel):
@@ -280,22 +282,40 @@ def get_parameters(
     param_annotations: Dict[str, Union[Annotated[Type[Any], str], Type[Any]]],
     default_values: Dict[str, Any],
 ) -> Parameters:
-    """Get the parameters of a function as defined by the OpenAI API
+    properties = {}
+    for k, v in param_annotations.items():
+        if v is not inspect.Signature.empty:
+            if get_origin(v) is Annotated:
+                v = get_args(v)[0]  # Get the actual type from Annotated
+            if get_origin(v) is List:
+                item_type = get_args(v)[0]
+                if get_origin(item_type) is Dict:
+                    properties[k] = {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "query_selector": {"type": "string"},
+                                "text": {"type": "string"},
+                            },
+                            "required": ["query_selector", "text"],
+                            "additionalProperties": "false",
+                        },
+                    }
+                else:
+                    properties[k] = {
+                        "type": "array",
+                        "items": get_parameter_json_schema(
+                            k, item_type, default_values
+                        ),
+                    }
+            else:
+                properties[k] = get_parameter_json_schema(k, v, default_values)
 
-    Args:
-        required: The required parameters of the function
-        hints: The type hints of the function as returned by typing.get_type_hints
-
-    Returns:
-        A Pydantic model for the parameters of the function
-    """
     return Parameters(
-        properties={
-            k: get_parameter_json_schema(k, v, default_values)
-            for k, v in param_annotations.items()
-            if v is not inspect.Signature.empty
-        },
-        required=required,
+        properties=properties,
+        required=list(properties.keys()),  # All properties are required
+        additionalProperties=False,
     )
 
 
@@ -399,8 +419,14 @@ def get_function_schema(
             description=description,
             name=fname,
             parameters=parameters,
+            strict=True,
         )
     )
+
+    schema = model_dump(function)
+    if fname == "bulk_enter_text":
+        print(f"Schema for {fname}:")
+        print(json.dumps(schema, indent=2))
 
     return model_dump(function)
 

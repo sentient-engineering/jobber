@@ -3,6 +3,7 @@ import base64
 from typing_extensions import Annotated
 
 from jobber.core.playwright_manager import PlaywrightManager
+from jobber.utils.logger import logger
 
 
 async def get_screenshot() -> (
@@ -21,13 +22,16 @@ async def get_screenshot() -> (
         # Create and use the PlaywrightManager
         browser_manager = PlaywrightManager(browser_type="chromium", headless=False)
         page = await browser_manager.get_current_page()
+        logger.info("page {page}")
 
         if not page:
+            logger.info("No active page found. OpenURL command opens a new page.")
             raise ValueError("No active page found. OpenURL command opens a new page.")
 
         await page.wait_for_load_state("domcontentloaded")
 
         # Capture the screenshot
+        logger.info("about to capture")
         screenshot_bytes = await page.screenshot(full_page=False)
 
         # Encode the screenshot as base64

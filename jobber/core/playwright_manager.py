@@ -121,10 +121,10 @@ class PlaywrightManager:
 
     async def create_browser_context(self):
         load_dotenv()
-        user_data_dir: str = os.environ["BROWSER_USER_DATA_DIR"]
-        profile_directory: str = os.environ["BROWSER_PROFILE"]
-        print("Browser profile", user_data_dir)
-        logger.info("Browser Profile - " + user_data_dir + profile_directory)
+        # user_data_dir: str = os.environ["BROWSER_USER_DATA_DIR"]
+        # profile_directory: str = os.environ["BROWSER_PROFILE"]
+        # print("Browser profile", user_data_dir)
+        # logger.info("Browser Profile - " + user_data_dir + profile_directory)
         try:
             # PlaywrightManager._browser_context = (
             #     await PlaywrightManager._playwright.chromium.launch_persistent_context(
@@ -185,9 +185,9 @@ class PlaywrightManager:
         except Exception as e:
             if "Target page, context or browser has been closed" in str(e):
                 new_user_dir = tempfile.mkdtemp()
-                logger.error(
-                    f"Failed to launch persistent context with user data dir {user_data_dir}: {e} Trying to launch with a new user dir {new_user_dir}"
-                )
+                # logger.error(
+                #     f"Failed to launch persistent context with user data dir {user_data_dir}: {e} Trying to launch with a new user dir {new_user_dir}"
+                # )
                 PlaywrightManager._browser_context = await PlaywrightManager._playwright.chromium.launch_persistent_context(
                     new_user_dir,
                     channel="chrome",
@@ -249,8 +249,8 @@ class PlaywrightManager:
                 page: Page = await browser.new_page()  # type: ignore
                 # await stealth_async(page)  # Apply stealth to the new page
                 return page
-        except Exception:
-            logger.warn("Browser context was closed. Creating a new one.")
+        except Exception as e:
+            logger.warn(f"Browser context was closed. Creating a new one. {e}")
             PlaywrightManager._browser_context = None
             _browser: BrowserContext = await self.get_browser_context()  # type: ignore
             page: Union[Page, None] = await self.get_current_page()

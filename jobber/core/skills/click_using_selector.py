@@ -24,7 +24,7 @@ async def click(
         float,
         "Optional wait time in seconds before executing the click event logic.",
         float,
-    ] = 0.0,
+    ],
 ) -> Annotated[str, "A message indicating success or failure of the click."]:
     """
     Executes a click action on the element matching the given query selector string within the currently open web page.

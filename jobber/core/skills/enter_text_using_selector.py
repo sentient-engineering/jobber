@@ -8,7 +8,7 @@ from typing import (
 )
 
 from playwright.async_api import Page
-from typing_extensions import Annotated, Union
+from typing_extensions import Annotated
 
 from jobber.core.playwright_manager import PlaywrightManager
 from jobber.core.skills.press_key_combination import press_key_combination
@@ -86,7 +86,7 @@ async def custom_fill_element(page: Page, selector: str, text_to_enter: str):
 
 async def entertext(
     entry: Annotated[
-        Union[EnterTextEntry, Dict[str, str]],
+        EnterTextEntry,
         "An object containing 'query_selector' (DOM selector query using mmid attribute e.g. [mmid='114']) and 'text' (text to enter on the element). mmid will always be a number",
     ],
 ) -> Annotated[str, "Explanation of the outcome of this operation."]:

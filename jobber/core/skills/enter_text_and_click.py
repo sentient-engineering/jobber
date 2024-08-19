@@ -26,7 +26,7 @@ async def enter_text_and_click(
     ],
     wait_before_click_execution: Annotated[
         float, "Optional wait time in seconds before executing the click.", float
-    ] = 0.0,
+    ],
 ) -> Annotated[
     str, "A message indicating success or failure of the text entry and click."
 ]:
