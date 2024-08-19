@@ -119,7 +119,8 @@ class PlaywrightManager:
             PlaywrightManager._playwright = None  # type: ignore
 
     async def create_browser_context(self):
-        load_dotenv()
+        # connecting to browser only via cdp
+        # load_dotenv()
         # user_data_dir: str = os.environ["BROWSER_USER_DATA_DIR"]
         # profile_directory: str = os.environ["BROWSER_PROFILE"]
         # print("Browser profile", user_data_dir)
@@ -206,6 +207,9 @@ class PlaywrightManager:
                 # logger.error(
                 #     f"Failed to launch persistent context with user data dir {user_data_dir}: {e} Trying to launch with a new user dir {new_user_dir}"
                 # )
+                logger.error(
+                    f"Failed to launch persistent context with provided user data dir: {e} Trying to launch with a new user dir {new_user_dir}"
+                )
                 PlaywrightManager._browser_context = await PlaywrightManager._playwright.chromium.launch_persistent_context(
                     new_user_dir,
                     channel="chrome",
