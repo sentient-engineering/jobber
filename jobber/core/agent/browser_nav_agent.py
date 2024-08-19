@@ -33,7 +33,7 @@ class BrowserNavAgent(BaseAgent):
             ),
             (click_element, LLM_PROMPTS["CLICK_PROMPT"]),
             (geturl, LLM_PROMPTS["GET_URL_PROMPT"]),
-            (bulk_enter_text, LLM_PROMPTS["BULK_ENTER_TEXT_PROMPT"]),
+            #(bulk_enter_text, LLM_PROMPTS["BULK_ENTER_TEXT_PROMPT"]),
             (entertext, LLM_PROMPTS["ENTER_TEXT_PROMPT"]),
             (press_key_combination, LLM_PROMPTS["PRESS_KEY_COMBINATION_PROMPT"]),
             (extract_text_from_pdf, LLM_PROMPTS["EXTRACT_TEXT_FROM_PDF_PROMPT"]),

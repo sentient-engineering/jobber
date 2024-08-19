@@ -190,6 +190,7 @@ class Parameters(BaseModel):
     properties: Dict[str, JsonSchemaValue]
     required: List[str]
     additionalProperties: bool
+    additionalProperties: bool
 
 
 class Function(BaseModel):
@@ -198,6 +199,7 @@ class Function(BaseModel):
     description: Annotated[str, Field(description="Description of the function")]
     name: Annotated[str, Field(description="Name of the function")]
     parameters: Annotated[Parameters, Field(description="Parameters of the function")]
+    strict: bool
     strict: bool
 
 
@@ -283,60 +285,39 @@ def get_parameters(
     param_annotations: Dict[str, Union[Annotated[Type[Any], str], Type[Any]]],
     default_values: Dict[str, Any],
 ) -> Parameters:
-    def process_type(t: Any) -> Dict[str, Any]:
-        origin = get_origin(t)
-        if origin is Annotated:
-            t = get_args(t)[0]
-            return process_type(t)
-
-        if origin is List:
-            item_type = get_args(t)[0]
-            return {"type": "array", "items": process_type(item_type)}
-        elif origin is Dict:
-            key_type, value_type = get_args(t)
-            return {"type": "object", "additionalProperties": process_type(value_type)}
-        elif origin is Union:
-            types = get_args(t)
-            if len(types) == 2 and type(None) in types:
-                # This is an Optional type
-                non_none_type = next(ty for ty in types if ty is not type(None))
-                schema = process_type(non_none_type)
-                schema["nullable"] = True
-                return schema
-            else:
-                return {"anyOf": [process_type(ty) for ty in types]}
-        elif isinstance(t, type) and issubclass(t, BaseModel):
-            return {
-                "type": "object",
-                "properties": {
-                    field: process_type(field_info.annotation)
-                    for field, field_info in t.__fields__.items()
-                },
-                "required": list(t.__fields__),
-                "additionalProperties": False,
-            }
-        else:
-            schema = get_parameter_json_schema("", t, {})
-            if schema.get("type") == "object" and "properties" not in schema:
-                schema["properties"] = {}
-            return schema
-
     properties = {}
     for k, v in param_annotations.items():
         if v is not inspect.Signature.empty:
-            prop_schema = process_type(v)
-            if k in default_values:
-                prop_schema["default"] = default_values[k]
-            properties[k] = prop_schema
-
-    # Ensure all properties in the schema are also in the required list
-    all_properties = set(properties.keys())
-    required = list(all_properties)
+            if get_origin(v) is Annotated:
+                v = get_args(v)[0]  # Get the actual type from Annotated
+            if get_origin(v) is List:
+                item_type = get_args(v)[0]
+                if get_origin(item_type) is Dict:
+                    properties[k] = {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "query_selector": {"type": "string"},
+                                "text": {"type": "string"},
+                            },
+                            "required": ["query_selector", "text"],
+                            "additionalProperties": "false",
+                        },
+                    }
+                else:
+                    properties[k] = {
+                        "type": "array",
+                        "items": get_parameter_json_schema(
+                            k, item_type, default_values
+                        ),
+                    }
+            else:
+                properties[k] = get_parameter_json_schema(k, v, default_values)
 
     return Parameters(
-        type="object",
         properties=properties,
-        required=required,
+        required=list(properties.keys()),  # All properties are required
         additionalProperties=False,
     )
 
@@ -442,12 +423,16 @@ def get_function_schema(
             name=fname,
             parameters=parameters,
             strict=True,
+            strict=True,
         )
     )
 
     schema = model_dump(function)
+    if fname == "bulk_enter_text":
+        print(f"Schema for {fname}:")
+        print(json.dumps(schema, indent=2))
 
-    return schema
+    return model_dump(function)
 
 
 def get_load_param_if_needed_function(
