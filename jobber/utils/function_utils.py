@@ -211,19 +211,7 @@ class ToolFunction(BaseModel):
 def get_parameter_json_schema(
     k: str, v: Any, default_values: Dict[str, Any]
 ) -> JsonSchemaValue:
-    """Get a JSON schema for a parameter as defined by the OpenAI API
-
-    Args:
-        k: The name of the parameter
-        v: The type of the parameter
-        default_values: The default values of the parameters of the function
-
-    Returns:
-        A Pydanitc model for the parameter
-    """
-
     def type2description(k: str, v: Union[Annotated[Type[Any], str], Type[Any]]) -> str:
-        # handles Annotated
         if hasattr(v, "__metadata__"):
             retval = v.__metadata__[0]
             if isinstance(retval, str):
@@ -236,14 +224,26 @@ def get_parameter_json_schema(
             return k
 
     schema = type2schema(v)
-    if k in default_values:
-        dv = default_values[k]
-        schema["default"] = dv
-
     schema["description"] = type2description(k, v)
 
-    return schema
+    if schema["type"] == "object":
+        schema["additionalProperties"] = False
+        if "properties" not in schema:
+            schema["properties"] = {}
 
+    if schema["type"] == "array":
+        if "items" not in schema:
+            schema["items"] = {
+                "type": "object",
+                "properties": {},
+                "additionalProperties": False,
+            }
+        elif schema["items"].get("type") == "object":
+            if "properties" not in schema["items"]:
+                schema["items"]["properties"] = {}
+            schema["items"]["additionalProperties"] = False
+
+    return schema
 
 def get_required_params(typed_signature: inspect.Signature) -> List[str]:
     """Get the required parameters of a function
@@ -282,39 +282,60 @@ def get_parameters(
     param_annotations: Dict[str, Union[Annotated[Type[Any], str], Type[Any]]],
     default_values: Dict[str, Any],
 ) -> Parameters:
+    def process_type(t: Any) -> Dict[str, Any]:
+        origin = get_origin(t)
+        if origin is Annotated:
+            t = get_args(t)[0]
+            return process_type(t)
+
+        if origin is List:
+            item_type = get_args(t)[0]
+            return {"type": "array", "items": process_type(item_type)}
+        elif origin is Dict:
+            key_type, value_type = get_args(t)
+            return {"type": "object", "additionalProperties": process_type(value_type)}
+        elif origin is Union:
+            types = get_args(t)
+            if len(types) == 2 and type(None) in types:
+                # This is an Optional type
+                non_none_type = next(ty for ty in types if ty is not type(None))
+                schema = process_type(non_none_type)
+                schema["nullable"] = True
+                return schema
+            else:
+                return {"anyOf": [process_type(ty) for ty in types]}
+        elif isinstance(t, type) and issubclass(t, BaseModel):
+            return {
+                "type": "object",
+                "properties": {
+                    field: process_type(field_info.annotation)
+                    for field, field_info in t.__fields__.items()
+                },
+                "required": list(t.__fields__),
+                "additionalProperties": False,
+            }
+        else:
+            schema = get_parameter_json_schema("", t, {})
+            if schema.get("type") == "object" and "properties" not in schema:
+                schema["properties"] = {}
+            return schema
+
     properties = {}
     for k, v in param_annotations.items():
         if v is not inspect.Signature.empty:
-            if get_origin(v) is Annotated:
-                v = get_args(v)[0]  # Get the actual type from Annotated
-            if get_origin(v) is List:
-                item_type = get_args(v)[0]
-                if get_origin(item_type) is Dict:
-                    properties[k] = {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "query_selector": {"type": "string"},
-                                "text": {"type": "string"},
-                            },
-                            "required": ["query_selector", "text"],
-                            "additionalProperties": "false",
-                        },
-                    }
-                else:
-                    properties[k] = {
-                        "type": "array",
-                        "items": get_parameter_json_schema(
-                            k, item_type, default_values
-                        ),
-                    }
-            else:
-                properties[k] = get_parameter_json_schema(k, v, default_values)
+            prop_schema = process_type(v)
+            if k in default_values:
+                prop_schema["default"] = default_values[k]
+            properties[k] = prop_schema
+
+    # Ensure all properties in the schema are also in the required list
+    all_properties = set(properties.keys())
+    required = list(all_properties)
 
     return Parameters(
+        type="object",
         properties=properties,
-        required=list(properties.keys()),  # All properties are required
+        required=required,
         additionalProperties=False,
     )
 
