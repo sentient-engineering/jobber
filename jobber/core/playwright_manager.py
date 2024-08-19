@@ -1,9 +1,7 @@
-import os
 import tempfile
 import time
 from typing import List, Union
 
-from dotenv import load_dotenv
 from playwright.async_api import BrowserContext, Page, Playwright
 from playwright.async_api import async_playwright as playwright
 
@@ -120,7 +118,8 @@ class PlaywrightManager:
             PlaywrightManager._playwright = None  # type: ignore
 
     async def create_browser_context(self):
-        load_dotenv()
+        # connecting to browser only via cdp
+        # load_dotenv()
         # user_data_dir: str = os.environ["BROWSER_USER_DATA_DIR"]
         # profile_directory: str = os.environ["BROWSER_PROFILE"]
         # print("Browser profile", user_data_dir)
@@ -188,6 +187,9 @@ class PlaywrightManager:
                 # logger.error(
                 #     f"Failed to launch persistent context with user data dir {user_data_dir}: {e} Trying to launch with a new user dir {new_user_dir}"
                 # )
+                logger.error(
+                    f"Failed to launch persistent context with provided user data dir: {e} Trying to launch with a new user dir {new_user_dir}"
+                )
                 PlaywrightManager._browser_context = await PlaywrightManager._playwright.chromium.launch_persistent_context(
                     new_user_dir,
                     channel="chrome",
@@ -283,7 +285,11 @@ class PlaywrightManager:
 
     async def go_to_homepage(self):
         page: Page = await PlaywrightManager.get_current_page(self)
-        await page.goto(self._homepage)
+        try:
+            await page.goto(self._homepage, timeout=10000)  # 10 seconds timeout
+        except Exception as e:
+            logger.error(f"Failed to navigate to homepage: {e}")
+            # implement a retry mechanism here
 
     async def set_navigation_handler(self):
         page: Page = await PlaywrightManager.get_current_page(self)
