@@ -18,14 +18,7 @@ setuptools = "^72.1.0"
 openai = "^1.40.1"
 boto3 = "^1.34.157"
 python-json-logger = "^2.0.7"
-<<<<<<< HEAD
-colorama = "^0.4.6"
-=======
 aiohttp = "^3.10.2"
-colorama = "^0.4.6"
-tiktoken = "^0.7.0"
-agentops = "^0.3.10"
-langsmith = "^0.1.99"
 
 
 [build-system]
