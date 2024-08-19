@@ -245,6 +245,7 @@ def get_parameter_json_schema(
 
     return schema
 
+
 def get_required_params(typed_signature: inspect.Signature) -> List[str]:
     """Get the required parameters of a function
 

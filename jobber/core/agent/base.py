@@ -1,7 +1,6 @@
 import json
 from typing import Callable, List, Optional, Tuple, Type
 
-import litellm
 import openai
 from pydantic import BaseModel
 
@@ -9,8 +8,8 @@ from jobber.utils.function_utils import get_function_schema
 from jobber.utils.logger import logger
 
 # Set global configurations for litellm
-#litellm.logging = False
-#litellm.success_callback = ["langsmith"]
+# litellm.logging = False
+# litellm.success_callback = ["langsmith"]
 
 
 class BaseAgent:
@@ -38,14 +37,14 @@ class BaseAgent:
         # Llm client
         self.client = openai.OpenAI()
         # TODO: use lite llm here.
-        #self.llm_config = {"model": "gpt-4o-2024-08-06"}
+        # self.llm_config = {"model": "gpt-4o-2024-08-06"}
 
         # Tools
         self.tools_list = []
         self.executable_functions_list = {}
         if tools:
             self._initialize_tools(tools)
-            #self.llm_config.update({"tools": self.tools_list, "tool_choice": "auto"})
+            # self.llm_config.update({"tools": self.tools_list, "tool_choice": "auto"})
 
     def _initialize_tools(self, tools: List[Tuple[Callable, str]]):
         for func, func_desc in tools:
@@ -63,7 +62,7 @@ class BaseAgent:
         if not self.keep_message_history:
             self._initialize_messages()
         self.messages.append({"role": "user", "content": input_data.model_dump_json()})
-        #print(self.messages)
+        # print(self.messages)
 
         # TODO: add a max_turn here to prevent a inifinite fallout
         while True:
