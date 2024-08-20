@@ -98,14 +98,12 @@ class Orchestrator:
 
         input_data = PlannerInput(
             objective=self.memory.objective,
-            screenshot=screenshot,
             plan=self.memory.plan,
             task_for_review=self.memory.current_task,
             completed_tasks=self.memory.completed_tasks,
         )
 
-        output: PlannerOutput = await agent.run(input_data)
-        print(output.model_dump_json())
+        output: PlannerOutput = await agent.run(input_data, screenshot)
 
         self._update_memory_from_planner(output)
 
@@ -176,7 +174,7 @@ class Orchestrator:
             print(f"{Fore.YELLOW}Completed Tasks:")
             for task in self.memory.completed_tasks:
                 status = "✓" if task.result else " "
-                print(f"{Fore.GREEN}  [{status}] {task.description}")
+                print(f"{Fore.GREEN}  [{status}] {task.id}. {task.description}")
         print(f"{Fore.CYAN}{'='*50}")
 
     def _print_task_result(self, task: Task):

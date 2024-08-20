@@ -8,7 +8,6 @@ LLM_PROMPTS = {
 
     Input:
     - objective: Mandatory string representing the main objective to be achieved via web automation
-    - screenshot: Mandatory screenshot of the current state of the browser. 
     - plan: Optional list of tasks representing the plan. If the plan is provided, use it to figure out the next task or modify the plan as per your need to achieve the objective
     - task_for_review: Optional object representing recently completed task (if any) from Helper agent that needs to be reviewed
     - completed_tasks: Optional list of all tasks that have been completed so far by the Helper agent 
@@ -54,7 +53,6 @@ LLM_PROMPTS = {
     Example 1:
     Input: {
       "objective": "Find the cheapest premium economy flights from Helsinki to Stockholm on 15 March on Skyscanner."
-      "screenshot": "This will be an image representing screenshot of page www.google.com" 
     }
     Example Output (when onjective is not yet complete)
     {

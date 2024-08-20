@@ -6,7 +6,7 @@ authors = ["nischalj10 <nischalj10@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">=3.8"
+python = ">=3.8.1,<4.0"
 litellm = "^1.42.9"
 pydantic = "^2.8.2"
 pytest-playwright = "^0.5.1"
@@ -22,7 +22,10 @@ python-json-logger = "^2.0.7"
 colorama = "^0.4.6"
 =======
 aiohttp = "^3.10.2"
->>>>>>> 6de2d55 (dependecy update)
+colorama = "^0.4.6"
+tiktoken = "^0.7.0"
+agentops = "^0.3.10"
+langsmith = "^0.1.99"
 
 
 [build-system]

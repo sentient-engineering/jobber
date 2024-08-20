@@ -3,6 +3,7 @@ from typing import Callable, List, Optional, Tuple, Type
 
 import openai
 from pydantic import BaseModel
+from langsmith.wrappers import wrap_openai
 
 from jobber.utils.function_utils import get_function_schema
 from jobber.utils.logger import logger
@@ -27,7 +28,7 @@ class BaseAgent:
 
         # Messages
         self.system_prompt = system_prompt
-        self.messages = self._initialize_messages()
+        self._initialize_messages()
         self.keep_message_history = keep_message_history
 
         # Input-output format
@@ -35,7 +36,7 @@ class BaseAgent:
         self.output_format = output_format
 
         # Llm client
-        self.client = openai.OpenAI()
+        self.client = wrap_openai(openai.Client())
         # TODO: use lite llm here.
         # self.llm_config = {"model": "gpt-4o-2024-08-06"}
 
@@ -54,15 +55,31 @@ class BaseAgent:
     def _initialize_messages(self):
         self.messages = [{"role": "system", "content": self.system_prompt}]
 
-    async def run(self, input_data: BaseModel) -> BaseModel:
+    async def run(self, input_data: BaseModel, screenshot: str = None) -> BaseModel:
         if not isinstance(input_data, self.input_format):
             raise ValueError(f"Input data must be of type {self.input_format.__name__}")
 
         # Handle message history.
         if not self.keep_message_history:
             self._initialize_messages()
-        self.messages.append({"role": "user", "content": input_data.model_dump_json()})
-        # print(self.messages)
+
+        if screenshot is None: 
+            self.messages.append({"role": "user", "content": input_data.model_dump_json()})
+        else:
+            self.messages.append({
+                "role": "user", 
+                "content": [
+                    {
+                        "type": "text", 
+                        "text": input_data.model_dump_json()
+                    }, 
+                    {
+                        "type": "image_url",
+                        "image_url": {"url": f"{screenshot}"}
+                    }
+                ]})
+        
+        #print(self.messages)
 
         # TODO: add a max_turn here to prevent a inifinite fallout
         while True:
@@ -76,7 +93,7 @@ class BaseAgent:
                     response_format=self.output_format,
                 )
             else:
-                print(self.tools_list)
+                #print(self.tools_list)]
                 response = self.client.beta.chat.completions.parse(
                     model="gpt-4o-2024-08-06",
                     messages=self.messages,
@@ -118,6 +135,7 @@ class BaseAgent:
         function_args = json.loads(tool_call.function.arguments)
         try:
             function_response = await function_to_call(**function_args)
+            print(function_response)
             self.messages.append(
                 {
                     "tool_call_id": tool_call.id,
