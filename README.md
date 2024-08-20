@@ -15,16 +15,16 @@ python3 --version # output: Python 3.8.xx
 python3 -m venv .venv
 source .venv/bin/activate
 ```
-1. Copy the example env file
+3. Copy the example env file
 ```bash
 cp .env.example .env
 ```
-1. Create service account API key for jobber on OpenAI (and Langsmith) and paste them in the `.env` file.
-3. Install dependencies
+4. Create service account API key for jobber on OpenAI (and Langsmith) and paste them in the `.env` file.
+5. Install dependencies
 ```bash
 pip3 install -r requirements.txt
 ```
-1. Setup playwright's browser binaries:
+6. Setup playwright's browser binaries:
 ```bash
 playwright install
 ```
@@ -36,9 +36,9 @@ OR using this command for Ubuntu:
 ```bash
 google-chrome --remote-debugging-port=9222
 ```
-1. Update your preferences in the `./jobber/user_preferences/user_preferences.txt` file.
-2. use the command `python -u -m jobber`
-3. example task - `apply for a backend engineer role based in helsinki on linkedin`
+2. Update your preferences in the `./jobber/user_preferences/user_preferences.txt` file.
+3. use the command `python -u -m jobber`
+4. example task - `apply for a backend engineer role based in helsinki on linkedin`
 
 # sentient
 
