@@ -8,14 +8,36 @@ checkout this [loom video](https://www.loom.com/share/2037ee751b4f491c8d2ffd472d
 
 #### setup
 
-1. install poetry if not already installed
+1. Create a fork of this repository on GitHub and clone your fork
 2. use python >=3.8 in venv
-3. do poetry install
+```bash
+python3 --version # output: Python 3.8.xx
+python3 -m venv .venv
+source .venv/bin/activate
+```
+1. Copy the example env file
+```bash
+cp .env.example .env
+```
+1. Create service account API key for jobber on OpenAI (and Langsmith) and paste them in the `.env` file.
+3. Install dependencies
+```bash
+pip3 install -r requirements.txt
+```
+1. Setup playwright's browser binaries:
+```bash
+playwright install
+```
 
 #### running the agent
 
 1. Start a chrome instance with this command and do necessary logins `sudo /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222`
-2. use the command `python -u -m jobber.main`
+OR using this command for Ubuntu:
+```bash
+google-chrome --remote-debugging-port=9222
+```
+1. Update your preferences in the `./jobber/user_preferences/user_preferences.txt` file.
+2. use the command `python -u -m jobber`
 3. example task - `apply for a backend engineer role based in helsinki on linkedin`
 
 # sentient
