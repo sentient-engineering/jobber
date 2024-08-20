@@ -33,7 +33,6 @@ class Memory(BaseModel):
 # Planner
 class PlannerInput(BaseModel):
     objective: str
-    screenshot: str
     plan: Optional[List[Task]]
     completed_tasks: Optional[List[Task]]
     task_for_review: Optional[Task]

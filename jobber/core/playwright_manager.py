@@ -119,7 +119,6 @@ class PlaywrightManager:
             PlaywrightManager._playwright = None  # type: ignore
 
     async def create_browser_context(self):
-        # connecting to browser only via cdp
         # load_dotenv()
         # user_data_dir: str = os.environ["BROWSER_USER_DATA_DIR"]
         # profile_directory: str = os.environ["BROWSER_PROFILE"]

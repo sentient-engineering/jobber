@@ -22,7 +22,10 @@ python-json-logger = "^2.0.7"
 colorama = "^0.4.6"
 =======
 aiohttp = "^3.10.2"
->>>>>>> 6de2d55 (dependecy update)
+colorama = "^0.4.6"
+tiktoken = "^0.7.0"
+agentops = "^0.3.10"
+langsmith = "^0.1.99"
 
 
 [build-system]

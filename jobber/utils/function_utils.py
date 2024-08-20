@@ -428,11 +428,8 @@ def get_function_schema(
     )
 
     schema = model_dump(function)
-    if fname == "bulk_enter_text":
-        print(f"Schema for {fname}:")
-        print(json.dumps(schema, indent=2))
 
-    return model_dump(function)
+    return schema
 
 
 def get_load_param_if_needed_function(
