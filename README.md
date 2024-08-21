@@ -22,5 +22,26 @@ checkout this [loom video](https://www.loom.com/share/2037ee751b4f491c8d2ffd472d
 2. use the command `python -u -m jobber.main`
 3. example task - `apply for a data engineer role on linkedin`
 
-#### prior work
+#### citations
 a bunch of amazing work in the space has inspired this. see [webvoyager](https://arxiv.org/abs/2401.13919), [agent-e](https://arxiv.org/abs/2407.13032)
+
+```
+@article{he2024webvoyager,
+  title={WebVoyager: Building an End-to-End Web Agent with Large Multimodal Models},
+  author={He, Hongliang and Yao, Wenlin and Ma, Kaixin and Yu, Wenhao and Dai, Yong and Zhang, Hongming and Lan, Zhenzhong and Yu, Dong},
+  journal={arXiv preprint arXiv:2401.13919},
+  year={2024}
+}
+```
+
+```
+@misc{abuelsaad2024-agente,
+      title={Agent-E: From Autonomous Web Navigation to Foundational Design Principles in Agentic Systems},
+      author={Tamer Abuelsaad and Deepak Akkil and Prasenjit Dey and Ashish Jagmohan and Aditya Vempaty and Ravi Kokku},
+      year={2024},
+      eprint={2407.13032},
+      archivePrefix={arXiv},
+      primaryClass={cs.AI},
+      url={https://arxiv.org/abs/2407.13032},
+}
+```
