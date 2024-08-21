@@ -1,3 +1,7 @@
+# sentient
+
+this agent is based on our upcoming open-source framework [sentient](http://sentient.engineering) to help devs instantly build fast & reliable AI agents that can control browsers autonomously in 3 lines of code.
+
 # jobber - apply to relevant jobs on internet autonomously
 
 jobber is an ai agent that searches and applies for jobs on your behalf by controlling your browser. put in your resume and preferences and it does the work in background.
@@ -18,9 +22,5 @@ checkout this [loom video](https://www.loom.com/share/2037ee751b4f491c8d2ffd472d
 2. use the command `python -u -m jobber.main`
 3. example task - `apply for a backend engineer role based in helsinki on linkedin`
 
-# sentient
-
-this agent is based on our upcoming open-source framework [sentient](http://sentient.engineering) to help devs instantly build fast & reliable AI agents that can control browsers autonomously in 3 lines of code.
-
-### prior work
+#### prior work
 a bunch of amazing work in the space has inspired this. see [webvoyager](https://arxiv.org/abs/2401.13919), [agent-e](https://arxiv.org/abs/2407.13032)
