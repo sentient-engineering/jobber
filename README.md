@@ -6,23 +6,47 @@ this agent is based on our upcoming open-source framework [sentient](http://sent
 
 jobber is an ai agent that searches and applies for jobs on your behalf by controlling your browser. put in your resume and preferences and it does the work in background.
 
-#### demo
+### demo
 
 checkout this [loom video](https://www.loom.com/share/2037ee751b4f491c8d2ffd472d8223bd?sid=53d08a9f-5a9b-4388-ae69-445032b31738) for a quick demo
 
-#### setup
+### setup
 
-1. install poetry if not already installed
-2. use python >=3.8 in venv
-3. do poetry install
+##### install poetry
 
-#### running the agent
+Install poetry using instructions mentioned [here](https://python-poetry.org/docs/#installation)
 
-1. Start a chrome instance with this command and do necessary logins `sudo /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222`
-2. use the command `python -u -m jobber.main`
-3. example task - `apply for a data engineer role on linkedin`
+##### install dependencies
+
+```bash
+poetry install
+```
+
+##### start chrome
+
+1. In a seaparate terminal, use the command to start chrome
+
+```bash
+sudo /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222
+```
+
+2.  Do necessary logins
+
+##### set up env
+
+Add OpenAI and Langsmith keys to .env file. You can refer .env.example
+
+##### run agent
+
+```bash
+python -u -m jobber.main
+```
+
+
+Enter your task. Sample task - `apply for a backend engineer role based in helsinki on linkedin`
 
 #### citations
+
 a bunch of amazing work in the space has inspired this. see [webvoyager](https://arxiv.org/abs/2401.13919), [agent-e](https://arxiv.org/abs/2407.13032)
 
 ```
