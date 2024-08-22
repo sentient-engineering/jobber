@@ -1,0 +1,52 @@
+[
+  {
+    "sites": null,
+    "task_id": 29,
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.allrecipes.com/",
+    "geolocation": null,
+    "intent_template": "Search for a Mediterranean-style grilled fish recipe on Allrecipes that includes ingredients like olives, has at least a 4-star rating, and more than 25 reviews. Detail the ingredients, cooking method, and total time required for preparation and cooking.",
+    "instantiation_dict": {},
+    "intent": "Search for a Mediterranean-style grilled fish recipe on Allrecipes that includes ingredients like olives, has at least a 4-star rating, and more than 25 reviews. Detail the ingredients, cooking method, and total time required for preparation and cooking.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": ["manual"],
+      "reference_answers": {
+        "manual_check": {
+          "answer": "'Branzino Mediterranean', 36 reviews, <Ingredients> include olive oil, <cooking method>, Prep Time: 15 mins, Cook Time: 25 mins, Total Time: 40 mins",
+          "type": "possible"
+        }
+      },
+      "reference_url": null,
+      "program_html": null
+    },
+    "task_alias": "Allrecipes--29",
+    "task_index": 1
+  },
+  {
+    "sites": null,
+    "task_id": 72,
+    "require_login": false,
+    "storage_state": null,
+    "start_url": "https://www.amazon.com/",
+    "geolocation": null,
+    "intent_template": "Look for a USB-C hub on Amazon compatible with MacBook Pro, featuring at least 4 ports, including HDMI and SD card reader. The price should be under $50. Select the one after sorting by Best Sellers.",
+    "instantiation_dict": {},
+    "intent": "Look for a USB-C hub on Amazon compatible with MacBook Pro, featuring at least 4 ports, including HDMI and SD card reader. The price should be under $50. Select the one after sorting by Best Sellers.",
+    "require_reset": false,
+    "eval": {
+      "eval_types": ["manual"],
+      "reference_answers": {
+        "manual_check": {
+          "answer": "Hiearcool USB C Hub, USB C Multi-Port Adapter for MacBook Pro, 7IN1, include 4K HDMI USB3.0 and SD/TF Card Reader, $24.99",
+          "type": "possible"
+        }
+      },
+      "reference_url": null,
+      "program_html": null
+    },
+    "task_alias": "Amazon--27",
+    "task_index": 2
+  }
+]

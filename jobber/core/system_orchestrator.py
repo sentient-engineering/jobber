@@ -7,17 +7,19 @@ from jobber.core.playwright_manager import PlaywrightManager
 
 
 class SystemOrchestrator:
-    def __init__(self):
+    def __init__(self, eval_mode: bool = False):
         load_dotenv()
         self.playwright_manager = PlaywrightManager()
         self.shutdown_event = asyncio.Event()
+        self.eval_mode = eval_mode
 
     async def start(self):
         print("Starting System Orchestrator...")
-        await self.playwright_manager.async_initialize()
+        await self.playwright_manager.async_initialize(eval_mode=self.eval_mode)
         print("Browser started and ready.")
 
-        await self.command_loop()
+        if not self.eval_mode:
+            await self.command_loop()
 
     async def command_loop(self):
         while not self.shutdown_event.is_set():
@@ -46,7 +48,10 @@ class SystemOrchestrator:
             planner = PlannerAgent()
             result = await planner.process_query(command)
             print(f"Command execution result: {result}")
-            return
+            if not self.eval_mode:
+                return
+            else:
+                return result
         except Exception as e:
             print(f"Error executing command: {e}")
 
