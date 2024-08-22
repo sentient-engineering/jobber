@@ -1,0 +1,5 @@
+python-dotenv
+poetry
+litellm
+playwright
+pdfplumber
