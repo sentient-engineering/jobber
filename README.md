@@ -24,13 +24,11 @@ poetry install
 
 ##### start chrome
 
-1. In a seaparate terminal, use the command to start chrome
+In a seaparate terminal, use the command to start chrome instance and do necesssary logins 
 
 ```bash
 sudo /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222
 ```
-
-2.  Do necessary logins
 
 ##### set up env
 
@@ -41,7 +39,6 @@ Add OpenAI and Langsmith keys to .env file. You can refer .env.example
 ```bash
 python -u -m jobber.main
 ```
-
 
 Enter your task. Sample task - `apply for a backend engineer role based in helsinki on linkedin`
 
