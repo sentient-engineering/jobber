@@ -62,7 +62,7 @@ class PlaywrightManager:
         self.set_take_screenshots(take_screenshots)
         self.set_screenshots_dir(screenshots_dir)
 
-    async def async_initialize(self):
+    async def async_initialize(self, eval_mode: bool = False):
         """
         Asynchronously initialize necessary components and handlers for the browser context.
         """
@@ -71,6 +71,7 @@ class PlaywrightManager:
 
         # Step 1: Ensure Playwright is started and browser context is created
         await self.start_playwright()
+        self.eval_mode = eval_mode
         await self.ensure_browser_context()
 
         # Step 2: Deferred setup of handlers
@@ -166,10 +167,29 @@ class PlaywrightManager:
             #     no_viewport=True,
             # )
 
-            browser = await PlaywrightManager._playwright.chromium.connect_over_cdp(
-                "http://localhost:9222"
-            )
-            PlaywrightManager._browser_context = browser.contexts[0]
+            # in eval mode - start a temp browser.
+            if self.eval_mode:
+                print("Starting in eval mode", self.eval_mode)
+                new_user_dir = tempfile.mkdtemp()
+                logger.info(
+                    f"Starting a temporary browser instance. trying to launch with a new user dir {new_user_dir}"
+                )
+                PlaywrightManager._browser_context = await PlaywrightManager._playwright.chromium.launch_persistent_context(
+                    new_user_dir,
+                    channel="chrome",
+                    headless=self.isheadless,
+                    args=[
+                        "--disable-blink-features=AutomationControlled",
+                        "--disable-session-crashed-bubble",  # disable the restore session bubble
+                        "--disable-infobars",  # disable informational popups,
+                    ],
+                    no_viewport=True,
+                )
+            else:
+                browser = await PlaywrightManager._playwright.chromium.connect_over_cdp(
+                    "http://localhost:9222"
+                )
+                PlaywrightManager._browser_context = browser.contexts[0]
 
             # Additional step to modify the navigator.webdriver property
             pages = PlaywrightManager._browser_context.pages
