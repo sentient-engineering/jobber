@@ -423,7 +423,6 @@ def get_function_schema(
             name=fname,
             parameters=parameters,
             strict=True,
-            strict=True,
         )
     )
 
