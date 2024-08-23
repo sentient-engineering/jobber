@@ -10,33 +10,61 @@ jobber is an ai agent that searches and applies for jobs on your behalf by contr
 
 checkout this [loom video](https://www.loom.com/share/2037ee751b4f491c8d2ffd472d8223bd?sid=53d08a9f-5a9b-4388-ae69-445032b31738) for a quick demo
 
+### jobber and jobber_fsm
+
+you might notice two separate implementations of jobber in the repo. `jobber` folder contains a simpler approach to implementing multi-agent conversation required between a planner and a browser agent. 
+
+the `jobber_fsm` folder contains another approach based on [finite state machines](https://github.com/sentient-engineering/multi-agent-fsm). there are slight nuances and both result in similar level or performace. however, the fsm approach is more scalable, and we will be doing further improvements in it. 
+
+the downside of fsm agent is that it is dependent on [structured output](https://openai.com/index/introducing-structured-outputs-in-the-api/) from open ai. so you can't reliably use cheaper models like gpt4o-mini or other oss models which is possible in `jobber`
+
 ### setup
 
-1. Install poetry
+1. we recommend installing poetry before proceeding with the next steps. you can install poetry using these [instructions](https://python-poetry.org/docs/#installation)
 
-Install poetry using instructions mentioned [here](https://python-poetry.org/docs/#installation)
-
-2. Install dependencies
+2. install dependencies
 
 ```bash
 poetry install
 ```
 
-3. Start chrome - In a seaparate terminal, use the command to start chrome instance and do necesssary logins
+3. start chrome in dev mode - in a seaparate terminal, use the command to start a chrome instance and do necesssary logins to job websites like linkedin/ wellfound, etc.
+
+for mac, use command -
 
 ```bash
 sudo /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222
 ```
 
-4. Set up Env - Add OpenAI and Langsmith keys to .env file. You can refer .env.example
+for linux -
 
-5. Run agent
+```bash
+google-chrome --remote-debugging-port=9222
+```
+
+for windows -
+
+```bash
+"C:\Program Files\Google\Chrome\Application\chrome.exe" --remote-debugging-port=9222
+```
+
+4. set up env - add openai and [langsmith](https://smith.langchain.com) keys to .env file. you can refer .env.example. currently adding langsmith is required but if you do not want to use it for tracing - then you can comment the line `litellm.success_callback = ["langsmith"]` in the `./jobber_fsm/core/agent/base.py` file.
+
+5. update your preferences in the `user_preferences.txt` file in the folder of agent that you are running (jobber/ jobber_fsm). provide the local file path to your resume in this file itself for the agent to be able to upload it. 
+
+5. run the agent - jobber_fsm or jobber
 
 ```bash
 python -u -m jobber_fsm.main
 ```
 
-6. Enter your task. Sample task -
+or 
+
+```bash
+python -u -m jobber.main
+```
+
+6. enter your task. sample task -
 
 ```bash
 apply for a backend engineer role based in helsinki on linkedin
