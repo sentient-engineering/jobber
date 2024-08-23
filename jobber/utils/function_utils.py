@@ -200,7 +200,6 @@ class Function(BaseModel):
     name: Annotated[str, Field(description="Name of the function")]
     parameters: Annotated[Parameters, Field(description="Parameters of the function")]
     strict: bool
-    strict: bool
 
 
 class ToolFunction(BaseModel):
@@ -214,16 +213,11 @@ def get_parameter_json_schema(
     k: str, v: Any, default_values: Dict[str, Any]
 ) -> JsonSchemaValue:
     def type2description(k: str, v: Union[Annotated[Type[Any], str], Type[Any]]) -> str:
-        if hasattr(v, "__metadata__"):
-            retval = v.__metadata__[0]
-            if isinstance(retval, str):
-                return retval
-            else:
-                raise ValueError(
-                    f"Invalid description {retval} for parameter {k}, should be a string."
-                )
-        else:
-            return k
+        if get_origin(v) is Annotated:
+            args = get_args(v)
+            if len(args) > 1 and isinstance(args[1], str):
+                return args[1]
+        return k
 
     schema = type2schema(v)
     schema["description"] = type2description(k, v)
@@ -289,31 +283,22 @@ def get_parameters(
     for k, v in param_annotations.items():
         if v is not inspect.Signature.empty:
             if get_origin(v) is Annotated:
-                v = get_args(v)[0]  # Get the actual type from Annotated
-            if get_origin(v) is List:
-                item_type = get_args(v)[0]
-                if get_origin(item_type) is Dict:
-                    properties[k] = {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "query_selector": {"type": "string"},
-                                "text": {"type": "string"},
-                            },
-                            "required": ["query_selector", "text"],
-                            "additionalProperties": "false",
-                        },
-                    }
-                else:
-                    properties[k] = {
-                        "type": "array",
-                        "items": get_parameter_json_schema(
-                            k, item_type, default_values
-                        ),
-                    }
+                v_type = get_args(v)[0]
+                v_desc = get_args(v)[1] if len(get_args(v)) > 1 else k
             else:
-                properties[k] = get_parameter_json_schema(k, v, default_values)
+                v_type = v
+                v_desc = k
+
+            if get_origin(v_type) is List:
+                item_type = get_args(v_type)[0]
+                properties[k] = {
+                    "type": "array",
+                    "items": get_parameter_json_schema(k, item_type, default_values),
+                    "description": v_desc,
+                }
+            else:
+                properties[k] = get_parameter_json_schema(k, v_type, default_values)
+                properties[k]["description"] = v_desc
 
     return Parameters(
         properties=properties,

@@ -224,7 +224,7 @@ async def do_entertext(
         - If 'use_keyboard_fill' is set to False, the function uses the 'custom_fill_element' method to enter the text.
     """
     try:
-        elem = await page.query_selector(f"[mmid='{selector}']")
+        elem = await page.query_selector(selector)
 
         if elem is None:
             error = f"Error: Selector {selector} not found. Unable to continue."

@@ -93,7 +93,7 @@ class BaseAgent:
                     response_format=self.output_format,
                 )
             else:
-                # print(self.tools_list)]
+                # print(self.tools_list)
                 response = self.client.beta.chat.completions.parse(
                     model="gpt-4o-2024-08-06",
                     messages=self.messages,
@@ -102,6 +102,7 @@ class BaseAgent:
                     tools=self.tools_list,
                 )
             response_message = response.choices[0].message
+            # print(response_message)
             tool_calls = response_message.tool_calls
 
             if tool_calls:
@@ -119,7 +120,7 @@ class BaseAgent:
         function_args = json.loads(tool_call.function.arguments)
         try:
             function_response = await function_to_call(**function_args)
-            print(function_response)
+            # print(function_response)
             self.messages.append(
                 {
                     "tool_call_id": tool_call.id,
