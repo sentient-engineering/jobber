@@ -22,17 +22,22 @@ init(autoreset=True)
 
 
 class Orchestrator:
-    def __init__(self, state_to_agent_map: dict[State, BaseAgent]):
+    def __init__(
+        self, state_to_agent_map: dict[State, BaseAgent], eval_mode: bool = False
+    ):
         load_dotenv()
         self.state_to_agent_map = state_to_agent_map
         self.playwright_manager = PlaywrightManager()
+        self.eval_mode = eval_mode
         self.shutdown_event = asyncio.Event()
 
     async def start(self):
         print("Starting orchestrator")
-        await self.playwright_manager.async_initialize()
+        await self.playwright_manager.async_initialize(eval_mode=self.eval_mode)
         print("Browser started and ready")
-        await self._command_loop()
+
+        if not self.eval_mode:
+            await self._command_loop()
 
     async def _command_loop(self):
         while not self.shutdown_event.is_set():
@@ -41,7 +46,7 @@ class Orchestrator:
                 if command.strip().lower() == "exit":
                     await self._shutdown()
                 else:
-                    await self._execute_command(command)
+                    await self.execute_command(command)
             except asyncio.CancelledError:
                 break
             except Exception as e:
@@ -52,7 +57,7 @@ class Orchestrator:
             None, input, "Enter your command (or type 'exit' to quit) "
         )
 
-    async def _execute_command(self, command: str):
+    async def execute_command(self, command: str):
         try:
             # Create initial memory
             self.memory = Memory(
@@ -67,6 +72,11 @@ class Orchestrator:
             while self.memory.current_state != State.COMPLETED:
                 await self._handle_state()
             self._print_final_response()
+
+            if self.eval_mode:
+                return self.memory.final_response
+            else:
+                return
         except Exception as e:
             print(f"Error executing the command {self.memory.objective}: {e}")
 
@@ -149,7 +159,7 @@ class Orchestrator:
         self.memory.current_task = None
         self.memory.current_state = State.PLAN
 
-    async def _shutdown(self):
+    async def shutdown(self):
         print("Shutting down orchestrator!")
         self.shutdown_event.set()
         await self.playwright_manager.stop_playwright()

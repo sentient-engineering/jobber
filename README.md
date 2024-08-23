@@ -12,9 +12,9 @@ checkout this [loom video](https://www.loom.com/share/2037ee751b4f491c8d2ffd472d
 
 ### jobber and jobber_fsm
 
-you might notice two separate implementations of jobber in the repo. `jobber` folder contains a simpler approach to implementing multi-agent conversation required between a planner and a browser agent. 
+you might notice two separate implementations of jobber in the repo. `jobber` folder contains a simpler approach to implementing multi-agent conversation required between a planner and a browser agent.
 
-the `jobber_fsm` folder contains another approach based on [finite state machines](https://github.com/sentient-engineering/multi-agent-fsm). there are slight nuances and both result in similar level or performace. however, the fsm approach is more scalable, and we will be doing further improvements in it. 
+the `jobber_fsm` folder contains another approach based on [finite state machines](https://github.com/sentient-engineering/multi-agent-fsm). there are slight nuances and both result in similar level or performace. however, the fsm approach is more scalable, and we will be doing further improvements in it.
 
 the downside of fsm agent is that it is dependent on [structured output](https://openai.com/index/introducing-structured-outputs-in-the-api/) from open ai. so you can't reliably use cheaper models like gpt4o-mini or other oss models which is possible in `jobber`
 
@@ -50,15 +50,15 @@ for windows -
 
 4. set up env - add openai and [langsmith](https://smith.langchain.com) keys to .env file. you can refer .env.example. currently adding langsmith is required but if you do not want to use it for tracing - then you can comment the line `litellm.success_callback = ["langsmith"]` in the `./jobber_fsm/core/agent/base.py` file.
 
-5. update your preferences in the `user_preferences.txt` file in the folder of agent that you are running (jobber/ jobber_fsm). provide the local file path to your resume in this file itself for the agent to be able to upload it. 
+5. update your preferences in the `user_preferences.txt` file in the folder of agent that you are running (jobber/ jobber_fsm). provide the local file path to your resume in this file itself for the agent to be able to upload it.
 
-5. run the agent - jobber_fsm or jobber
+6. run the agent - jobber_fsm or jobber
 
 ```bash
 python -u -m jobber_fsm.main
 ```
 
-or 
+or
 
 ```bash
 python -u -m jobber.main
@@ -68,6 +68,20 @@ python -u -m jobber.main
 
 ```bash
 apply for a backend engineer role based in helsinki on linkedin
+```
+
+### Run evals
+
+1. For Jobber
+
+```bash
+ python -m test.tests_processor --orchestrator_type vanilla
+```
+
+2. For Jobber FSM
+
+```bash
+ python -m test.tests_processor --orchestrator_type fsm
 ```
 
 #### citations

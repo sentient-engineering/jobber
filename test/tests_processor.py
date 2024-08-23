@@ -1,3 +1,4 @@
+import argparse
 import asyncio
 import json
 import os
@@ -11,6 +12,10 @@ from termcolor import colored
 from jobber.config import PROJECT_TEST_ROOT
 from jobber.core.system_orchestrator import SystemOrchestrator
 from jobber.utils.logger import logger
+from jobber_fsm.core.agent.browser_nav_agent import BrowserNavAgent
+from jobber_fsm.core.agent.planner_agent import PlannerAgent
+from jobber_fsm.core.models.models import State
+from jobber_fsm.core.orchestrator.orchestrator import Orchestrator
 from test.evaluators import evaluator_router
 from test.test_utils import (
     get_formatted_current_timestamp,
@@ -178,7 +183,7 @@ async def execute_single_task(
 
 
 async def run_tests(
-    orchestrator: SystemOrchestrator,
+    orchestrator: SystemOrchestrator | Orchestrator,
     min_task_index: int,
     max_task_index: int,
     test_file: str = "",
@@ -282,12 +287,31 @@ async def run_tests(
 
 
 # Main execution function (if needed)
-async def main():
-    orchestrator = SystemOrchestrator()
+async def main(orchestrator_type: str):
+    orchestrator_type = None
+    if orchestrator_type == "vanilla":
+        orchestrator = SystemOrchestrator(eval_mode=True)
+    else:
+        state_to_agent_map = {
+            State.PLAN: PlannerAgent(),
+            State.BROWSE: BrowserNavAgent(),
+        }
+        orchestrator = Orchestrator(
+            state_to_agent_map=state_to_agent_map, eval_mode=True
+        )
     await orchestrator.start()
-    test_results = await run_tests(orchestrator, 0, 5)  # Example: Run first 5 tests
+    await run_tests(orchestrator, 0, 30)  # Example: Run first 5 tests
     await orchestrator.shutdown()
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    parser = argparse.ArgumentParser(description="Run tests with specified parameters.")
+    parser.add_argument(
+        "--orchestrator_type",
+        type=str,
+        default="vanilla",
+        choices=["vanilla", "fsm"],
+        help="Specify the type of orchestrator: vanilla or fsm",
+    )
+    args = parser.parse_args()
+    asyncio.run(main(args.orchestrator_type))
