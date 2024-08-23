@@ -12,21 +12,37 @@ checkout this [loom video](https://www.loom.com/share/2037ee751b4f491c8d2ffd472d
 
 ### setup
 
-1. install poetry if not already installed
-2. use python >=3.8 in venv
-3. do poetry install
+1. Install poetry
 
-#### running the agent
+Install poetry using instructions mentioned [here](https://python-poetry.org/docs/#installation)
 
-1. Start a chrome instance with this command and do necessary logins `sudo /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222`
-2. use the command `python -u -m jobber.main`
-3. example task - `apply for a data engineer role on linkedin`
+2. Install dependencies
 
-# sentient
+```bash
+poetry install
+```
 
-this agent is based on our upcoming open-source framework [sentient](http://sentient.engineering) to help devs instantly build fast & reliable AI agents that can control browsers autonomously in 3 lines of code.
+3. Start chrome - In a seaparate terminal, use the command to start chrome instance and do necesssary logins
 
-### prior work
+```bash
+sudo /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222
+```
+
+4. Set up Env - Add OpenAI and Langsmith keys to .env file. You can refer .env.example
+
+5. Run agent
+
+```bash
+python -u -m jobber_fsm.main
+```
+
+6. Enter your task. Sample task -
+
+```bash
+apply for a backend engineer role based in helsinki on linkedin
+```
+
+#### citations
 
 a bunch of amazing work in the space has inspired this. see [webvoyager](https://arxiv.org/abs/2401.13919), [agent-e](https://arxiv.org/abs/2407.13032)
 
