@@ -33,7 +33,7 @@ sudo /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-deb
 5. Run agent
 
 ```bash
-python -u -m jobber.main
+python -u -m jobber_fsm.main
 ```
 
 6. Enter your task. Sample task -
