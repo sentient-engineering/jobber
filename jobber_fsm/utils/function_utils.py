@@ -189,6 +189,8 @@ class Parameters(BaseModel):
     type: Literal["object"] = "object"
     properties: Dict[str, JsonSchemaValue]
     required: List[str]
+    additionalProperties: bool
+    additionalProperties: bool
 
 
 class Function(BaseModel):
@@ -197,6 +199,7 @@ class Function(BaseModel):
     description: Annotated[str, Field(description="Description of the function")]
     name: Annotated[str, Field(description="Name of the function")]
     parameters: Annotated[Parameters, Field(description="Parameters of the function")]
+    strict: bool
 
 
 class ToolFunction(BaseModel):
@@ -209,36 +212,32 @@ class ToolFunction(BaseModel):
 def get_parameter_json_schema(
     k: str, v: Any, default_values: Dict[str, Any]
 ) -> JsonSchemaValue:
-    """Get a JSON schema for a parameter as defined by the OpenAI API
-
-    Args:
-        k: The name of the parameter
-        v: The type of the parameter
-        default_values: The default values of the parameters of the function
-
-    Returns:
-        A Pydanitc model for the parameter
-    """
-
     def type2description(k: str, v: Union[Annotated[Type[Any], str], Type[Any]]) -> str:
-        # handles Annotated
-        if hasattr(v, "__metadata__"):
-            retval = v.__metadata__[0]
-            if isinstance(retval, str):
-                return retval
-            else:
-                raise ValueError(
-                    f"Invalid description {retval} for parameter {k}, should be a string."
-                )
-        else:
-            return k
+        if get_origin(v) is Annotated:
+            args = get_args(v)
+            if len(args) > 1 and isinstance(args[1], str):
+                return args[1]
+        return k
 
     schema = type2schema(v)
-    if k in default_values:
-        dv = default_values[k]
-        schema["default"] = dv
-
     schema["description"] = type2description(k, v)
+
+    if schema["type"] == "object":
+        schema["additionalProperties"] = False
+        if "properties" not in schema:
+            schema["properties"] = {}
+
+    if schema["type"] == "array":
+        if "items" not in schema:
+            schema["items"] = {
+                "type": "object",
+                "properties": {},
+                "additionalProperties": False,
+            }
+        elif schema["items"].get("type") == "object":
+            if "properties" not in schema["items"]:
+                schema["items"]["properties"] = {}
+            schema["items"]["additionalProperties"] = False
 
     return schema
 
@@ -280,22 +279,31 @@ def get_parameters(
     param_annotations: Dict[str, Union[Annotated[Type[Any], str], Type[Any]]],
     default_values: Dict[str, Any],
 ) -> Parameters:
-    """Get the parameters of a function as defined by the OpenAI API
+    properties = {}
+    for k, v in param_annotations.items():
+        if v is not inspect.Signature.empty:
+            if get_origin(v) is Annotated:
+                v_type = get_args(v)[0]
+                v_desc = get_args(v)[1] if len(get_args(v)) > 1 else k
+            else:
+                v_type = v
+                v_desc = k
 
-    Args:
-        required: The required parameters of the function
-        hints: The type hints of the function as returned by typing.get_type_hints
+            if get_origin(v_type) is List:
+                item_type = get_args(v_type)[0]
+                properties[k] = {
+                    "type": "array",
+                    "items": get_parameter_json_schema(k, item_type, default_values),
+                    "description": v_desc,
+                }
+            else:
+                properties[k] = get_parameter_json_schema(k, v_type, default_values)
+                properties[k]["description"] = v_desc
 
-    Returns:
-        A Pydantic model for the parameters of the function
-    """
     return Parameters(
-        properties={
-            k: get_parameter_json_schema(k, v, default_values)
-            for k, v in param_annotations.items()
-            if v is not inspect.Signature.empty
-        },
-        required=required,
+        properties=properties,
+        required=list(properties.keys()),  # All properties are required
+        additionalProperties=False,
     )
 
 
@@ -399,10 +407,13 @@ def get_function_schema(
             description=description,
             name=fname,
             parameters=parameters,
+            strict=True,
         )
     )
 
-    return model_dump(function)
+    schema = model_dump(function)
+
+    return schema
 
 
 def get_load_param_if_needed_function(

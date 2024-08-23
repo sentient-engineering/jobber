@@ -1,15 +1,15 @@
-from jobber.core.agent.base import BaseAgent
-from jobber.core.models.models import BrowserNavInput, BrowserNavOutput
-from jobber.core.prompts.prompts import LLM_PROMPTS
-from jobber.core.skills.click_using_selector import click as click_element
-from jobber.core.skills.enter_text_and_click import enter_text_and_click
-from jobber.core.skills.enter_text_using_selector import bulk_enter_text, entertext
-from jobber.core.skills.get_dom_with_content_type import get_dom_with_content_type
-from jobber.core.skills.get_url import geturl
-from jobber.core.skills.open_url import openurl
-from jobber.core.skills.pdf_text_extractor import extract_text_from_pdf
-from jobber.core.skills.press_key_combination import press_key_combination
-from jobber.core.skills.upload_file import upload_file
+from jobber_fsm.core.agent.base import BaseAgent
+from jobber_fsm.core.models.models import BrowserNavInput, BrowserNavOutput
+from jobber_fsm.core.prompts.prompts import LLM_PROMPTS
+from jobber_fsm.core.skills.click_using_selector import click as click_element
+from jobber_fsm.core.skills.enter_text_and_click import enter_text_and_click
+from jobber_fsm.core.skills.enter_text_using_selector import bulk_enter_text, entertext
+from jobber_fsm.core.skills.get_dom_with_content_type import get_dom_with_content_type
+from jobber_fsm.core.skills.get_url import geturl
+from jobber_fsm.core.skills.open_url import openurl
+from jobber_fsm.core.skills.pdf_text_extractor import extract_text_from_pdf
+from jobber_fsm.core.skills.press_key_combination import press_key_combination
+from jobber_fsm.core.skills.upload_file import upload_file
 
 
 class BrowserNavAgent(BaseAgent):
@@ -33,7 +33,7 @@ class BrowserNavAgent(BaseAgent):
             ),
             (click_element, LLM_PROMPTS["CLICK_PROMPT"]),
             (geturl, LLM_PROMPTS["GET_URL_PROMPT"]),
-            #(bulk_enter_text, LLM_PROMPTS["BULK_ENTER_TEXT_PROMPT"]),
+            (bulk_enter_text, LLM_PROMPTS["BULK_ENTER_TEXT_PROMPT"]),
             (entertext, LLM_PROMPTS["ENTER_TEXT_PROMPT"]),
             (press_key_combination, LLM_PROMPTS["PRESS_KEY_COMBINATION_PROMPT"]),
             (extract_text_from_pdf, LLM_PROMPTS["EXTRACT_TEXT_FROM_PDF_PROMPT"]),

@@ -1,10 +1,10 @@
 from datetime import datetime
 from string import Template
 
-from jobber.core.agent.base import BaseAgent
-from jobber.core.memory import ltm
-from jobber.core.models.models import PlannerInput, PlannerOutput
-from jobber.core.prompts.prompts import LLM_PROMPTS
+from jobber_fsm.core.agent.base import BaseAgent
+from jobber_fsm.core.memory import ltm
+from jobber_fsm.core.models.models import PlannerInput, PlannerOutput
+from jobber_fsm.core.prompts.prompts import LLM_PROMPTS
 
 
 class PlannerAgent(BaseAgent):
@@ -27,8 +27,10 @@ class PlannerAgent(BaseAgent):
         system_prompt: str = LLM_PROMPTS["PLANNER_AGENT_PROMPT"]
 
         # Add user ltm to system prompt
-        ltm = "\n" + ltm
-        system_prompt = Template(system_prompt).substitute(basic_user_information=ltm)
+        
+        if ltm is not None: 
+            ltm = "\n" + ltm
+            system_prompt = Template(system_prompt).substitute(basic_user_information=ltm)
 
         # Add today's day & date to the system prompt
         today = datetime.now()

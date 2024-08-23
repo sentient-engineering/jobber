@@ -6,8 +6,9 @@ import openai
 from langsmith.wrappers import wrap_openai
 from pydantic import BaseModel
 
-from jobber.utils.function_utils import get_function_schema
-from jobber.utils.logger import logger
+
+from jobber_fsm.utils.function_utils import get_function_schema
+from jobber_fsm.utils.logger import logger
 
 # Set global configurations for litellm
 litellm.logging = False

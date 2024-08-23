@@ -6,13 +6,13 @@ from typing import Dict
 from playwright.async_api import ElementHandle, Page
 from typing_extensions import Annotated
 
-from jobber.core.playwright_manager import PlaywrightManager
-from jobber.utils.dom_helper import get_element_outer_html
-from jobber.utils.dom_mutation_observer import (
+from jobber_fsm.core.web_driver.playwright import PlaywrightManager
+from jobber_fsm.utils.dom_helper import get_element_outer_html
+from jobber_fsm.utils.dom_mutation_observer import (
     subscribe,  # type: ignore
     unsubscribe,  # type: ignore
 )
-from jobber.utils.logger import logger
+from jobber_fsm.utils.logger import logger
 
 
 async def click(
@@ -24,7 +24,7 @@ async def click(
         float,
         "Optional wait time in seconds before executing the click event logic.",
         float,
-    ] = 0.0,
+    ],
 ) -> Annotated[str, "A message indicating success or failure of the click."]:
     """
     Executes a click action on the element matching the given query selector string within the currently open web page.

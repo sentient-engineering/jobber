@@ -1,0 +1,26 @@
+Personal Info:
+First Name: Nischal
+Last Name: Jain
+Date of birth: 
+Pronouns: He/Him
+
+Email: 
+Expeted Salary: 5000000
+Occupation: Data Engineer
+Address: Indiranagr, Bengaluru
+Phone Number: 
+LinkedIn - https://linkedin.com/in/nischalj10
+
+
+Here are some of my preferences:
+Shopping Preferences: www.amazon.com
+Favorite news source: www.thehindu.com
+Favorite flight booking site to use with every flight related query: https://www.google.com/travel/flightsno
+Resume File to Upload Path = /Users/namanjain/Downloads/DummyResume.pdf
+My best project - checkout headless-ollama on google
+
+
+I am comfortable commuting to office.
+I have 4 years of experience in TypeScript, Node Js, Nextjs.
+I have work authorization for working in the USA.
+I have experience in cloud infrastructure, data warheouses.

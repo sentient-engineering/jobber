@@ -3,12 +3,11 @@ import inspect
 
 from typing_extensions import Annotated
 
-from jobber.core.playwright_manager import PlaywrightManager
-from jobber.core.skills.click_using_selector import do_click
-from jobber.core.skills.enter_text_using_selector import do_entertext
-from jobber.core.skills.press_key_combination import do_press_key_combination
-from jobber.utils.logger import logger
-from jobber.utils.ui_messagetype import MessageType
+from jobber_fsm.core.web_driver.playwright import PlaywrightManager
+from jobber_fsm.core.skills.click_using_selector import do_click
+from jobber_fsm.core.skills.enter_text_using_selector import do_entertext
+from jobber_fsm.core.skills.press_key_combination import do_press_key_combination
+from jobber_fsm.utils.logger import logger
 
 
 async def enter_text_and_click(
@@ -26,7 +25,7 @@ async def enter_text_and_click(
     ],
     wait_before_click_execution: Annotated[
         float, "Optional wait time in seconds before executing the click.", float
-    ] = 0.0,
+    ],
 ) -> Annotated[
     str, "A message indicating success or failure of the text entry and click."
 ]:

@@ -5,12 +5,12 @@ from typing import List, Union
 from playwright.async_api import BrowserContext, Page, Playwright
 from playwright.async_api import async_playwright as playwright
 
-from jobber.utils.dom_mutation_observer import (
+from jobber_fsm.utils.dom_mutation_observer import (
     dom_mutation_change_detected,
     handle_navigation_for_mutation_observer,
 )
-from jobber.utils.logger import logger
-from jobber.utils.ui_messagetype import MessageType
+from jobber_fsm.utils.logger import logger
+from jobber_fsm.utils.ui_messagetype import MessageType
 
 # TODO - Create a wrapper browser manager class that either starts a playwright manager (our solution) or a hosted browser manager like browserbase
 
@@ -119,7 +119,6 @@ class PlaywrightManager:
             PlaywrightManager._playwright = None  # type: ignore
 
     async def create_browser_context(self):
-        # connecting to browser only via cdp
         # load_dotenv()
         # user_data_dir: str = os.environ["BROWSER_USER_DATA_DIR"]
         # profile_directory: str = os.environ["BROWSER_PROFILE"]
@@ -204,6 +203,9 @@ class PlaywrightManager:
         except Exception as e:
             if "Target page, context or browser has been closed" in str(e):
                 new_user_dir = tempfile.mkdtemp()
+                # logger.error(
+                #     f"Failed to launch persistent context with user data dir {user_data_dir}: {e} Trying to launch with a new user dir {new_user_dir}"
+                # )
                 logger.error(
                     f"Failed to launch persistent context with provided user data dir: {e} Trying to launch with a new user dir {new_user_dir}"
                 )
@@ -268,8 +270,10 @@ class PlaywrightManager:
                 page: Page = await browser.new_page()  # type: ignore
                 # await stealth_async(page)  # Apply stealth to the new page
                 return page
-        except Exception:
-            logger.warn("Browser context was closed. Creating a new one.")
+        except Exception as e:
+            logger.warn(f"Browser context was closed. Creating a new one. {e}")
+        except Exception as e:
+            logger.warn(f"Browser context was closed. Creating a new one. {e}")
             PlaywrightManager._browser_context = None
             _browser: BrowserContext = await self.get_browser_context()  # type: ignore
             page: Union[Page, None] = await self.get_current_page()
@@ -302,6 +306,11 @@ class PlaywrightManager:
 
     async def go_to_homepage(self):
         page: Page = await PlaywrightManager.get_current_page(self)
+        try:
+            await page.goto(self._homepage, timeout=10000)  # 10 seconds timeout
+        except Exception as e:
+            logger.error(f"Failed to navigate to homepage: {e}")
+            # implement a retry mechanism here
         try:
             await page.goto(self._homepage, timeout=10000)  # 10 seconds timeout
         except Exception as e:

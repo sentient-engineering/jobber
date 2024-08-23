@@ -58,7 +58,7 @@ if not PYDANTIC_V1:
 
 # Remove this once we drop support for pydantic 1.x
 else:  # pragma: no cover
-    from pydantic import schema_of
+    from pydantic import TypeAdapter
     from pydantic.typing import (
         evaluate_forwardref as evaluate_forwardref,  # type: ignore[no-redef]
     )
@@ -88,7 +88,7 @@ else:  # pragma: no cover
                     "type": "array",
                 }
 
-        d = schema_of(t)
+        d = TypeAdapter.json_schema(t)
         if "title" in d:
             d.pop("title")
         if "description" in d:

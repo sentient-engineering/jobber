@@ -1,9 +1,9 @@
 import asyncio
 
-from jobber.core.agent.browser_nav_agent import BrowserNavAgent
-from jobber.core.agent.planner_agent import PlannerAgent
-from jobber.core.models.models import State
-from jobber.core.orchestrator.orchestrator import Orchestrator
+from jobber_fsm.core.agent.browser_nav_agent import BrowserNavAgent
+from jobber_fsm.core.agent.planner_agent import PlannerAgent
+from jobber_fsm.core.models.models import State
+from jobber_fsm.core.orchestrator.orchestrator import Orchestrator
 
 
 async def main():

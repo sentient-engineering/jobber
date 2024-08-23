@@ -285,7 +285,7 @@ async def run_tests(
 async def main():
     orchestrator = SystemOrchestrator()
     await orchestrator.start()
-    test_results = await run_tests(orchestrator, 0, 5)  # Example: Run first 5 tests
+    await run_tests(orchestrator, 0, 5)  # Example: Run first 5 tests
     await orchestrator.shutdown()
 
 

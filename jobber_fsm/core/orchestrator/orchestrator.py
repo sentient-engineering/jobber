@@ -4,8 +4,8 @@ import textwrap
 from colorama import Fore, init
 from dotenv import load_dotenv
 
-from jobber.core.agent.base import BaseAgent
-from jobber.core.models.models import (
+from jobber_fsm.core.agent.base import BaseAgent
+from jobber_fsm.core.models.models import (
     BrowserNavInput,
     BrowserNavOutput,
     Memory,
@@ -14,9 +14,9 @@ from jobber.core.models.models import (
     State,
     Task,
 )
-from jobber.core.playwright_manager import PlaywrightManager
-from jobber.core.skills.get_screenshot import get_screenshot
-from jobber.core.skills.get_url import geturl
+from jobber_fsm.core.skills.get_screenshot import get_screenshot
+from jobber_fsm.core.skills.get_url import geturl
+from jobber_fsm.core.web_driver.playwright import PlaywrightManager
 
 init(autoreset=True)
 
