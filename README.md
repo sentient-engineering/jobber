@@ -12,35 +12,35 @@ checkout this [loom video](https://www.loom.com/share/2037ee751b4f491c8d2ffd472d
 
 ### setup
 
-##### install poetry
+1. Install poetry
 
 Install poetry using instructions mentioned [here](https://python-poetry.org/docs/#installation)
 
-##### install dependencies
+2. Install dependencies
 
 ```bash
 poetry install
 ```
 
-##### start chrome
-
-In a seaparate terminal, use the command to start chrome instance and do necesssary logins 
+3. Start chrome - In a seaparate terminal, use the command to start chrome instance and do necesssary logins
 
 ```bash
 sudo /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222
 ```
 
-##### set up env
+4. Set up Env - Add OpenAI and Langsmith keys to .env file. You can refer .env.example
 
-Add OpenAI and Langsmith keys to .env file. You can refer .env.example
-
-##### run agent
+5. Run agent
 
 ```bash
 python -u -m jobber.main
 ```
 
-Enter your task. Sample task - `apply for a backend engineer role based in helsinki on linkedin`
+6. Enter your task. Sample task -
+
+```bash
+apply for a backend engineer role based in helsinki on linkedin
+```
 
 #### citations
 
