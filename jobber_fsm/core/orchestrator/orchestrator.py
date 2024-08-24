@@ -44,7 +44,7 @@ class Orchestrator:
             try:
                 command = await self._get_user_input()
                 if command.strip().lower() == "exit":
-                    await self._shutdown()
+                    await self.shutdown()
                 else:
                     await self.execute_command(command)
             except asyncio.CancelledError:

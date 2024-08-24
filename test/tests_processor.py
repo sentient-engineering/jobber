@@ -300,7 +300,8 @@ async def main(orchestrator_type: str):
             state_to_agent_map=state_to_agent_map, eval_mode=True
         )
     await orchestrator.start()
-    await run_tests(orchestrator, 0, 30)  # Example: Run first 5 tests
+    await run_tests(orchestrator, 20, 35
+                    )  # Example: Run first 5 tests
     await orchestrator.shutdown()
 
 
