@@ -122,7 +122,7 @@ async def entertext(
     """
     logger.info(f"Entering text: {entry}")
 
-    if isinstance(entry, dict):
+    if isinstance(entry, Dict):
         query_selector: str = entry["query_selector"]
         text_to_enter: str = entry["text"]
     elif isinstance(entry, EnterTextEntry):

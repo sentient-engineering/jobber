@@ -9,11 +9,11 @@ LLM_PROMPTS = {
     Input:
     - objective: Mandatory string representing the main objective to be achieved via web automation
     - plan: Optional list of tasks representing the plan. If the plan is provided, use it to figure out the next task or modify the plan as per your need to achieve the objective
-    - task_for_review: Optional object representing recently completed task (if any) from Helper agent that needs to be reviewed
-    - completed_tasks: Optional list of all tasks that have been completed so far by the Helper agent 
+    - task_for_review: Optional object representing recently completed task (if any) from Helper agent that needs to be reviewed.
+    - completed_tasks: Optional list of all tasks that have been completed so far by the Helper agent in order to complete the objectiv.
 
     Output:
-    - plan: Mandaory List of tasks that need be performed to achieve the objective 
+    - plan: Mandaory List of tasks that need be performed to achieve the objective. Update this based on the objective, completed_tasks, tasks_for_review. You will also be provided with the current screenhot of the browser page by the Helper to plan better. Your END goal is to achieve objective. 
     - next_task: Optional String representing detailed next task to be executed by Helper agent(if the objective is not yet complete). Next task is consistent with the plan. This needs to be present for every response except when objective has been achieved. Once you recieve a confirmation from that your previous task HAS BEEN EXECUTED, SEND THE next_task from the OVERALL plan. MAKE SURE to look at the provided screenshot to adjust the appropriate next task
     - is_complete: Mandatory boolean indicating whether the entire objective has been achieved. Return True when the exact objective is complete without any compromises or you are absolutely convinced that the objective cannot be completed, no otherwise. This is mandatory for every response.
     - final_response: Optional string representing the summary of the completed work. This is to be returned only if the objective is COMPLETE. This is the final answer string that will be returned to the user. Use the plan and result to come with final response for the objective provided by the user.

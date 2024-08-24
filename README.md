@@ -55,13 +55,13 @@ for windows -
 6. run the agent - jobber_fsm or jobber
 
 ```bash
-python -u -m jobber_fsm.main
+python -u -m jobber_fsm
 ```
 
 or
 
 ```bash
-python -u -m jobber.main
+python -u -m jobber
 ```
 
 6. enter your task. sample task -

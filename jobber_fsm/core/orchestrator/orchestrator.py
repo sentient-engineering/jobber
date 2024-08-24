@@ -1,5 +1,6 @@
 import asyncio
 import textwrap
+from typing import Dict
 
 from colorama import Fore, init
 from dotenv import load_dotenv
@@ -23,7 +24,7 @@ init(autoreset=True)
 
 class Orchestrator:
     def __init__(
-        self, state_to_agent_map: dict[State, BaseAgent], eval_mode: bool = False
+        self, state_to_agent_map: Dict[State, BaseAgent], eval_mode: bool = False
     ):
         load_dotenv()
         self.state_to_agent_map = state_to_agent_map
@@ -108,7 +109,8 @@ class Orchestrator:
 
         input_data = PlannerInput(
             objective=self.memory.objective,
-            plan=self.memory.plan,
+            # plan=self.memory.plan,
+            plan=None,
             task_for_review=self.memory.current_task,
             completed_tasks=self.memory.completed_tasks,
         )
