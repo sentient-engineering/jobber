@@ -1,58 +1,62 @@
-# sentient
+#  Sentient
 
-this agent is based on our upcoming open-source framework [sentient](http://sentient.engineering) to help devs instantly build fast & reliable AI agents that can control browsers autonomously in 3 lines of code.
+**Jobber** is based on our upcoming open-source framework [sentient](http://sentient.engineering) to help devs instantly build fast & reliable AI agents that can control browsers autonomously in 3 lines of code.
 
-# jobber - apply to relevant jobs on internet autonomously
+# <div align="center"> **Jobber** </div>  
+# <div align="center"> *"apply to relevant jobs on internet autonomously"* </div>
+**Jobber** is an AI agent that searches and applies for jobs on your behalf by controlling your browser. Put in your resume and preferences and it does the work in background.
 
-jobber is an ai agent that searches and applies for jobs on your behalf by controlling your browser. put in your resume and preferences and it does the work in background.
+## Demo
 
-### demo
+Checkout this [loom video](https://www.loom.com/share/2037ee751b4f491c8d2ffd472d8223bd?sid=53d08a9f-5a9b-4388-ae69-445032b31738) for a quick demo
 
-checkout this [loom video](https://www.loom.com/share/2037ee751b4f491c8d2ffd472d8223bd?sid=53d08a9f-5a9b-4388-ae69-445032b31738) for a quick demo
+<hr />
 
-### jobber and jobber_fsm
+## `jobber` and `jobber_fsm`
 
-you might notice two separate implementations of jobber in the repo. `jobber` folder contains a simpler approach to implementing multi-agent conversation required between a planner and a browser agent.
+You might notice two separate implementations of jobber in the repo. `jobber` folder contains a simpler approach to implementing multi-agent conversation required between a planner and a browser agent.
 
-the `jobber_fsm` folder contains another approach based on [finite state machines](https://github.com/sentient-engineering/multi-agent-fsm). there are slight nuances and both result in similar level or performace. however, the fsm approach is more scalable, and we will be doing further improvements in it.
+The `jobber_fsm` folder contains another approach based on [finite state machines](https://github.com/sentient-engineering/multi-agent-fsm). there are slight nuances and both result in similar level or performace. however, the fsm approach is more scalable, and we will be doing further improvements in it.
 
-the downside of fsm agent is that it is dependent on [structured output](https://openai.com/index/introducing-structured-outputs-in-the-api/) from open ai. so you can't reliably use cheaper models like gpt4o-mini or other oss models which is possible in `jobber`
+The downside of fsm agent is that it is dependent on [structured output](https://openai.com/index/introducing-structured-outputs-in-the-api/) from open ai. so you can't reliably use cheaper models like gpt4o-mini or other oss models which is possible in `jobber`
 
-### setup
+<hr />
 
-1. we recommend installing poetry before proceeding with the next steps. you can install poetry using these [instructions](https://python-poetry.org/docs/#installation)
+## Setup
 
-2. install dependencies
+1. We recommend installing poetry before proceeding with the next steps. you can install poetry using these [instructions](https://python-poetry.org/docs/#installation)
+
+2. Install dependencies
 
 ```bash
 poetry install
 ```
 
-3. start chrome in dev mode - in a seaparate terminal, use the command to start a chrome instance and do necesssary logins to job websites like linkedin/ wellfound, etc.
+3. Start chrome in dev mode - in a seaparate terminal, use the command to start a chrome instance and do necesssary logins to job websites like linkedin/ wellfound, etc.
 
-for mac, use command -
+- [x] for mac, use command -
 
 ```bash
 sudo /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --remote-debugging-port=9222
 ```
 
-for linux -
+- [x] for linux -
 
 ```bash
 google-chrome --remote-debugging-port=9222
 ```
 
-for windows -
+- [x] for windows -
 
 ```bash
 "C:\Program Files\Google\Chrome\Application\chrome.exe" --remote-debugging-port=9222
 ```
 
-4. set up env - add openai and [langsmith](https://smith.langchain.com) keys to .env file. you can refer .env.example. currently adding langsmith is required but if you do not want to use it for tracing - then you can comment the line `litellm.success_callback = ["langsmith"]` in the `./jobber_fsm/core/agent/base.py` file.
+4. Setup env - add openai and [langsmith](https://smith.langchain.com) keys to .env file. you can refer .env.example. currently adding langsmith is required but if you do not want to use it for tracing - then you can comment the line `litellm.success_callback = ["langsmith"]` in the `./jobber_fsm/core/agent/base.py` file.
 
-5. update your preferences in the `user_preferences.txt` file in the folder of agent that you are running (jobber/ jobber_fsm). provide the local file path to your resume in this file itself for the agent to be able to upload it.
+5. Update your preferences in the `user_preferences.txt` file in the folder of agent that you are running (jobber/ jobber_fsm). provide the local file path to your resume in this file itself for the agent to be able to upload it.
 
-6. run the agent - jobber_fsm or jobber
+6. Run the agent - `jobber_fsm` or `jobber`
 
 ```bash
 python -u -m jobber_fsm
@@ -64,13 +68,13 @@ or
 python -u -m jobber
 ```
 
-6. enter your task. sample task -
+6. Enter your task. sample task -
 
 ```bash
 apply for a backend engineer role based in helsinki on linkedin
 ```
 
-### Run evals
+## Run evals
 
 1. For Jobber
 
@@ -84,9 +88,11 @@ apply for a backend engineer role based in helsinki on linkedin
  python -m test.tests_processor --orchestrator_type fsm
 ```
 
-#### citations
+<hr />
 
-a bunch of amazing work in the space has inspired this. see [webvoyager](https://arxiv.org/abs/2401.13919), [agent-e](https://arxiv.org/abs/2407.13032)
+### Citations
+
+A bunch of amazing work in the space has inspired this. See [webvoyager](https://arxiv.org/abs/2401.13919), [agent-e](https://arxiv.org/abs/2407.13032)
 
 ```
 @article{he2024webvoyager,
@@ -108,3 +114,4 @@ a bunch of amazing work in the space has inspired this. see [webvoyager](https:/
       url={https://arxiv.org/abs/2407.13032},
 }
 ```
+# <div align="center">Don't forget to leave a star ⭐️</div>
