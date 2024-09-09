@@ -1,6 +1,6 @@
 # sentient
 
-this agent is based on our upcoming open-source framework [sentient](http://sentient.engineering) to help devs instantly build fast & reliable AI agents that can control browsers autonomously in 3 lines of code.
+this agent is based on our upcoming open-source framework [sentient](https://github.com/sentient-engineering/sentient) to help devs instantly build fast & reliable AI agents that can control browsers autonomously in 3 lines of code. checkout the beta sentient package on [pypi](https://pypi.org/project/sentient/) & our experiemnts to advance oss web navigating agents in the [agent-q repository](https://github.com/sentient-engineering/agent-q)
 
 # jobber - apply to relevant jobs on internet autonomously
 
